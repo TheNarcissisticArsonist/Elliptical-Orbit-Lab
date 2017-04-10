@@ -98,11 +98,22 @@ function animateLoop() {
 	//console.log("animateLoop()");
 
 	clearAndResetCanvas();
+	drawAxes();
 
 	requestAnimationFrame(animateLoop);
 }
+function drawAxes() {
+	ctx.moveTo(0, 0);
+	ctx.lineTo(0.5*zoom*(1/defaults.zoom)*page.canvas.width, 0);
+	ctx.moveTo(0, 0);
+	ctx.lineTo(-0.5*zoom*(1/defaults.zoom)*page.canvas.width, 0);
+	ctx.moveTo(0, 0);
+	ctx.lineTo(0, 0.5*zoom*(1/defaults.zoom)*page.canvas.height);
+	ctx.moveTo(0, 0);
+	ctx.lineTo(0, -0.5*zoom*(1/defaults.zoom)*page.canvas.height);
+	ctx.stroke();
+}
 function mouseMoved(event) {
-	console.log(mouseButtons["1"] + "\t" + overCanvas + "\t" + event.clientX + "," + event.clientY);
 	oldMouseLocation[0] = mouseLocation[0];
 	oldMouseLocation[1] = mouseLocation[1];
 	mouseLocation[0] = event.clientX;
