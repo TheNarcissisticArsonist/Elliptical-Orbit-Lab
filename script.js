@@ -8,14 +8,17 @@ var defaults = {
 	iniVelX: "0",
 	iniVelY: "5.6E3",
 	pos: [0, 0],
-	zoom: 1
+	zoom: 50
 };
+var dragPanningConstant = 1/40; //This constant slows down the rate that dragging pans the graph.
 
 //Global Variables
 var page = {};
 var inputValues = {};
 var pos = [];
-var zoom = 1;
+var zoom;
+var mouseLocation = [];
+var oldMouseLocation = [];
 
 //Classes
 
@@ -64,6 +67,8 @@ function loadDefaults() {
 	page.iniPosY.value = defaults.iniPosY;
 	page.iniVelX.value = defaults.iniVelX;
 	page.iniVelY.value = defaults.iniVelY;
+	pos = defaults.pos.slice(0);
+	zoom = defaults.zoom;
 }
 function animate() {
 	console.log("FUNCTION CALL: animate()");
@@ -88,7 +93,15 @@ function animateLoop() {
 
 }
 function mouseMoved(event) {
+	mouseLocation[0] = event.clientX;
+	mouseLocation[1] = event.clientY;
 
+	var delta = [0, 0];
+	delta[0] = mouseLocation[0]-oldMouseLocation[0];
+	delta[1] = mouseLocation[1]-oldMouseLocation[1];
+
+	pos[0] += delta[0] * dragPanningConstant * defaults.zoom * (1/zoom);
+	pos[1] += delta[1] * dragPanningConstant * defaults.zoom * (1/zoom);
 }
 function mousedown(event) {
 
