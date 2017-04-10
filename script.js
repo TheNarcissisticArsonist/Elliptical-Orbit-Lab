@@ -11,6 +11,8 @@ var defaults = {
 	zoom: 50
 };
 var dragPanningConstant = 1/40; //This constant slows down the rate that dragging pans the graph.
+var zoomPowerConstant = 1.1; //This is used when calculating the zoom factor when scrolling.
+var mouseWheelCalibrationConstant = 53; //This is the value given when the mouse is scrolled one notch.
 
 //Global Variables
 var page = {};
@@ -21,6 +23,7 @@ var mouseLocation = [];
 var oldMouseLocation = [];
 var mouseButtons = {};
 var overCanvas = false;
+var ctx;
 
 //Classes
 
@@ -39,6 +42,8 @@ function setup() {
 	page.animate = document.getElementById("animate");
 	page.canvas = document.getElementById("graphArea");
 	page.numInputList = document.getElementsByClassName("numInput");
+
+	ctx = page.canvas.getContext("2d");
 
 	inputSetup();
 
@@ -75,24 +80,30 @@ function loadDefaults() {
 function animate() {
 	console.log("FUNCTION CALL: animate()");
 
-	initialCanvasSetup();
 	requestAnimationFrame(animateLoop);
 }
-function initialCanvasSetup() {
-	console.log("FUNCTION CALL: initialCanvasSetup()");
+function clearAndResetCanvas() {
+	console.log("FUNCTION CALL: clearAndResetCanvas()");
 
-	context.setTransform(1, 0, 0, 1, 0, 0); //Reset all context transforms
-	context.clearRect(0, 0, page.canvas.width, page.canvas.height); //Clear the entire canvas
-	context.fillRect(0, 0, page.canvas.width, page.canvas.height);
-	context.beginPath(); //Start a new line path.
-	context.transform(1, 0, 0, 1, page.canvas.width/2, page.canvas.height/2); //Put 0,0 in the center of the canvas
-	context.transform(zoom, 0, 0, zoom, 0, 0); //Scale the canvas
-	context.transform(1, 0, 0, -1, 0, 0); //Flip the canvas vertically.
-	context.lineWidth = 1/zoom; //Keep the lines the same thickness.
+	ctx.setTransform(1, 0, 0, 1, 0, 0); //Reset all context transforms
+	ctx.clearRect(0, 0, page.canvas.width, page.canvas.height); //Clear the entire canvas
+	ctx.beginPath(); //Start a new line path.
+	ctx.transform(1, 0, 0, 1, page.canvas.width/2, page.canvas.height/2); //Put 0,0 in the center of the canvas
+	ctx.transform(zoom, 0, 0, zoom, 0, 0); //Scale the canvas
+	ctx.transform(1, 0, 0, -1, 0, 0); //Flip the canvas vertically.
+	ctx.lineWidth = 1/zoom; //Keep the lines the same thickness.
+	ctx.transform(1, 0, 0, 1, -pos[0], -pos[1]);
 }
 function animateLoop() {
 	console.log("animateLoop()");
 
+	clearAndResetCanvas();
+
+	ctx.moveTo(0, 0);
+	ctx.lineTo(25, 25);
+	ctx.stroke();
+
+	requestAnimationFrame(animateLoop);
 }
 function mouseMoved(event) {
 	mouseLocation[0] = event.clientX;
@@ -102,7 +113,7 @@ function mouseMoved(event) {
 		var delta = [0, 0];
 		delta[0] = mouseLocation[0]-oldMouseLocation[0];
 		delta[1] = mouseLocation[1]-oldMouseLocation[1];
-		
+
 		pos[0] += delta[0] * dragPanningConstant * defaults.zoom * (1/zoom);
 		pos[1] += delta[1] * dragPanningConstant * defaults.zoom * (1/zoom);
 	}
@@ -116,7 +127,11 @@ function mouseup(event) {
 	mouseButtons[String(event.which)] = false;
 }
 function wheel(event) {
-
+	event.preventDefault();
+	event.returnValue = false;
+	var wheelChange = event.deltaY;
+	var zoomMultiplier = Math.pow(zoomPowerConstant, wheelChange*(1/mouseWheelCalibrationConstant)); //I may want to change how this zoom works later.
+	zoom /= zoomMultiplier;
 }
 function mouseEnterCanvas(event) {
 	//
