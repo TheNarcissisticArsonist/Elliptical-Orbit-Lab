@@ -19,6 +19,8 @@ var pos = [];
 var zoom;
 var mouseLocation = [];
 var oldMouseLocation = [];
+var mouseButtons = {};
+var overCanvas = false;
 
 //Classes
 
@@ -96,27 +98,33 @@ function mouseMoved(event) {
 	mouseLocation[0] = event.clientX;
 	mouseLocation[1] = event.clientY;
 
-	var delta = [0, 0];
-	delta[0] = mouseLocation[0]-oldMouseLocation[0];
-	delta[1] = mouseLocation[1]-oldMouseLocation[1];
-
-	pos[0] += delta[0] * dragPanningConstant * defaults.zoom * (1/zoom);
-	pos[1] += delta[1] * dragPanningConstant * defaults.zoom * (1/zoom);
+	if(mouseButtons["1"] && overCanvas) {
+		var delta = [0, 0];
+		delta[0] = mouseLocation[0]-oldMouseLocation[0];
+		delta[1] = mouseLocation[1]-oldMouseLocation[1];
+		
+		pos[0] += delta[0] * dragPanningConstant * defaults.zoom * (1/zoom);
+		pos[1] += delta[1] * dragPanningConstant * defaults.zoom * (1/zoom);
+	}
 }
 function mousedown(event) {
-
+	//
+	mouseButtons[String(event.which)] = true;
 }
 function mouseup(event) {
-
+	//
+	mouseButtons[String(event.which)] = false;
 }
 function wheel(event) {
 
 }
 function mouseEnterCanvas(event) {
-
+	//
+	overCanvas = true;
 }
 function mouseLeaveCanvas(event) {
-
+	//
+	overCanvas = false;
 }
 
 //Executed Code
