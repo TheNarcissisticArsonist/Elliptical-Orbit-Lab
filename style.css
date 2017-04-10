@@ -12,6 +12,7 @@ pre {
 }
 canvas {
 	border: 1px dotted black;
+	background: white;
 }
 div {
 	display: inline-block;
