@@ -83,7 +83,7 @@ function animate() {
 	requestAnimationFrame(animateLoop);
 }
 function clearAndResetCanvas() {
-	console.log("FUNCTION CALL: clearAndResetCanvas()");
+	//console.log("FUNCTION CALL: clearAndResetCanvas()");
 
 	ctx.setTransform(1, 0, 0, 1, 0, 0); //Reset all context transforms
 	ctx.clearRect(0, 0, page.canvas.width, page.canvas.height); //Clear the entire canvas
@@ -95,7 +95,7 @@ function clearAndResetCanvas() {
 	ctx.transform(1, 0, 0, 1, -pos[0], -pos[1]);
 }
 function animateLoop() {
-	console.log("animateLoop()");
+	//console.log("animateLoop()");
 
 	clearAndResetCanvas();
 
@@ -106,6 +106,9 @@ function animateLoop() {
 	requestAnimationFrame(animateLoop);
 }
 function mouseMoved(event) {
+	console.log(mouseButtons["1"] + "\t" + overCanvas + "\t" + event.clientX + "," + event.clientY);
+	oldMouseLocation[0] = mouseLocation[0];
+	oldMouseLocation[1] = mouseLocation[1];
 	mouseLocation[0] = event.clientX;
 	mouseLocation[1] = event.clientY;
 
@@ -114,7 +117,7 @@ function mouseMoved(event) {
 		delta[0] = mouseLocation[0]-oldMouseLocation[0];
 		delta[1] = mouseLocation[1]-oldMouseLocation[1];
 
-		pos[0] += delta[0] * dragPanningConstant * defaults.zoom * (1/zoom);
+		pos[0] += -1 * delta[0] * dragPanningConstant * defaults.zoom * (1/zoom);
 		pos[1] += delta[1] * dragPanningConstant * defaults.zoom * (1/zoom);
 	}
 }
