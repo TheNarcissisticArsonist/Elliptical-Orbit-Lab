@@ -58,7 +58,7 @@ function inputSetup() {
 	page.canvas.addEventListener("wheel", function(event) { wheel(event); });
 	page.canvas.addEventListener("mouseenter", function(event) { mouseEnterCanvas(event); });
 	page.canvas.addEventListener("mouseleave", function(event) { mouseLeaveCanvas(event); });
-	page.animate.addEventListener("click", animate);
+	page.animate.addEventListener("click", startAnimation);
 
 	for(var i=0; i<page.numInputList.length; ++i) {
 		page.numInputList[i].addEventListener(focus, function() { this.select(); });
@@ -77,7 +77,7 @@ function loadDefaults() {
 	pos = defaults.pos.slice(0);
 	zoom = defaults.zoom;
 }
-function animate() {
+function startAnimation() {
 	console.log("FUNCTION CALL: animate()");
 
 	requestAnimationFrame(animateLoop);
@@ -98,10 +98,6 @@ function animateLoop() {
 	//console.log("animateLoop()");
 
 	clearAndResetCanvas();
-
-	ctx.moveTo(0, 0);
-	ctx.lineTo(25, 25);
-	ctx.stroke();
 
 	requestAnimationFrame(animateLoop);
 }
