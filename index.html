@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Elliptical Orbit Lab</title>
+	<link rel="stylesheet" type="text/css" href="./style.css">
+</head>
+<body>
+
+<!-- mEarth, t, G, x0, y0, vx0, vy0 -->
+
+<pre>Center Mass m=</pre><textarea id="massCenter" class="numInput"></textarea><br>
+<pre>Simulation Seconds per Real Second kt=</pre><textarea id="timeRatio" class="numInput"></textarea><br>
+<pre>Universal Gravitational Constant G=</pre><textarea id="gConstant" class="numInput"></textarea><br>
+<pre>Initial Position x0=</pre><textarea id="iniPosX" class="numInput"></textarea><br>
+<pre>Initial Position y0=</pre><textarea id="iniPosY" class="numInput"></textarea><br>
+<pre>Initial Velocity vx0=</pre><textarea id="iniVelX" class="numInput"></textarea><br>
+<pre>Initial Velocity vy0=</pre><textarea id="iniVelY" class="numInput"></textarea>
+
+<br><br>
+
+<div id="graph" class="button">Graph</div>
+<div id="animate" class="button">Animate</div>
+
+<br><br>
+
+<canvas id="graphArea" width="500px" height="500px"></canvas>
+
+<script type="text/javascript" src="./script.js"></script>
+</body>
+</html>
