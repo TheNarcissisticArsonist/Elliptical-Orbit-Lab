@@ -8,9 +8,9 @@ var defaults = {
 	iniVelX: "0",
 	iniVelY: "5.6E3",
 	pos: [0, 0],
-	zoom: 50
+	zoom: 0.00005
 };
-var dragPanningConstant = 1/40; //This constant slows down the rate that dragging pans the graph.
+var dragPanningConstant = 1/defaults.zoom; //This constant slows down the rate that dragging pans the graph.
 var zoomPowerConstant = 1.1; //This is used when calculating the zoom factor when scrolling.
 var mouseWheelCalibrationConstant = 53; //This is the value given when the mouse is scrolled one notch.
 var axisColors = [["#ffaaaa", "#ff0000"], ["#aaaaff", "#0000ff"]]; //The colors for the axes. [[x-, x+], [y-, y+]]
@@ -98,8 +98,6 @@ function clearAndResetCanvas() {
 	ctx.transform(1, 0, 0, 1, -pos[0], -pos[1]);
 }
 function animateLoop() {
-	//console.log("animateLoop()");
-
 	clearAndResetCanvas();
 	drawAxes();
 
@@ -143,7 +141,6 @@ function drawAxes() {
 		ctx.lineTo(tickPos[0], tickPos[1]-(tickLength/2));
 		ctx.stroke();
 		numChars = 2+Math.floor(Math.abs(Math.log10(interval)));
-		console.log(numChars);
 		if(tickPos[0] < 0) {
 			++numChars;
 		}
