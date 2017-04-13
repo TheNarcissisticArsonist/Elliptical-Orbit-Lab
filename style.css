@@ -17,6 +17,9 @@ canvas {
 div {
 	display: inline-block;
 }
+input.checkbox {
+	vertical-align: middle;
+}
 
 div.button {
 	padding: 5px;

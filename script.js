@@ -8,7 +8,8 @@ var defaults = {
 	iniVelX: "0",
 	iniVelY: "5.6E3",
 	pos: [0, 0],
-	zoom: 0.00005
+	zoom: 0.00005,
+	gridlines: true
 };
 var dragPanningConstant = 1/defaults.zoom; //This constant slows down the rate that dragging pans the graph.
 var zoomPowerConstant = 1.1; //This is used when calculating the zoom factor when scrolling.
@@ -26,6 +27,7 @@ var oldMouseLocation = [];
 var mouseButtons = {};
 var overCanvas = false;
 var ctx;
+var drawGridlines;
 
 //Classes
 
@@ -44,6 +46,7 @@ function setup() {
 	page.animate = document.getElementById("animate");
 	page.canvas = document.getElementById("graphArea");
 	page.numInputList = document.getElementsByClassName("numInput");
+	page.gridlines = document.getElementById("gridlines");
 
 	ctx = page.canvas.getContext("2d");
 
@@ -61,6 +64,7 @@ function inputSetup() {
 	page.canvas.addEventListener("mouseenter", function(event) { mouseEnterCanvas(event); });
 	page.canvas.addEventListener("mouseleave", function(event) { mouseLeaveCanvas(event); });
 	page.animate.addEventListener("click", startAnimation);
+	page.gridlines.addEventListener("click", function() { drawGridlines = this.checked; });
 
 	for(var i=0; i<page.numInputList.length; ++i) {
 		page.numInputList[i].addEventListener(focus, function() { this.select(); });
@@ -78,6 +82,8 @@ function loadDefaults() {
 	page.iniVelY.value = defaults.iniVelY;
 	pos = defaults.pos.slice(0);
 	zoom = defaults.zoom;
+	page.gridlines.checked = defaults.gridlines;
+	drawGridlines = page.gridlines.checked;
 }
 function startAnimation() {
 	console.log("FUNCTION CALL: animate()");
@@ -137,6 +143,15 @@ function drawAxes() {
 	var numChars;
 	while(tickPos[0] > bounds[0][0]) {
 		tickPos[0] -= interval;
+		if(drawGridlines) {
+			ctx.beginPath();
+			ctx.strokeStyle = "#eeeeee";
+			ctx.moveTo(tickPos[0], bounds[1][0]);
+			ctx.lineTo(tickPos[0], bounds[1][1]);
+			ctx.stroke();
+			ctx.beginPath();
+			ctx.strokeStyle = "#000000";
+		}
 		ctx.moveTo(tickPos[0], tickPos[1]+(tickLength/2));
 		ctx.lineTo(tickPos[0], tickPos[1]-(tickLength/2));
 		ctx.stroke();
@@ -149,6 +164,15 @@ function drawAxes() {
 	tickPos = [0, 0];
 	while(tickPos[0] < bounds[0][1]) {
 		tickPos[0] += interval;
+		if(drawGridlines) {
+			ctx.beginPath();
+			ctx.strokeStyle = "#eeeeee";
+			ctx.moveTo(tickPos[0], bounds[1][0]);
+			ctx.lineTo(tickPos[0], bounds[1][1]);
+			ctx.stroke();
+			ctx.beginPath();
+			ctx.strokeStyle = "#000000";
+		}
 		ctx.moveTo(tickPos[0], tickPos[1]+(tickLength/2));
 		ctx.lineTo(tickPos[0], tickPos[1]-(tickLength/2));
 		ctx.stroke();
@@ -161,6 +185,15 @@ function drawAxes() {
 	tickPos = [0, 0];
 	while(tickPos[1] > bounds[1][0]) {
 		tickPos[1] -= interval;
+		if(drawGridlines) {
+			ctx.beginPath();
+			ctx.strokeStyle = "#eeeeee";
+			ctx.moveTo(bounds[0][0], tickPos[1]);
+			ctx.lineTo(bounds[0][1], tickPos[1]);
+			ctx.stroke();
+			ctx.beginPath();
+			ctx.strokeStyle = "#000000";
+		}
 		ctx.moveTo(tickPos[0]+(tickLength/2), tickPos[1]);
 		ctx.lineTo(tickPos[0]-(tickLength/2), tickPos[1]);
 		ctx.stroke();
@@ -173,6 +206,15 @@ function drawAxes() {
 	tickPos = [0, 0];
 	while(tickPos[1] < bounds[1][1]) {
 		tickPos[1] += interval;
+		if(drawGridlines) {
+			ctx.beginPath();
+			ctx.strokeStyle = "#eeeeee";
+			ctx.moveTo(bounds[0][0], tickPos[1]);
+			ctx.lineTo(bounds[0][1], tickPos[1]);
+			ctx.stroke();
+			ctx.beginPath();
+			ctx.strokeStyle = "#000000";
+		}
 		ctx.moveTo(tickPos[0]+(tickLength/2), tickPos[1]);
 		ctx.lineTo(tickPos[0]-(tickLength/2), tickPos[1]);
 		ctx.stroke();
