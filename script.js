@@ -103,10 +103,15 @@ function animateLoop() {
 	requestAnimationFrame(animateLoop);
 }
 function drawAxes() {
-	ctx.moveTo(0.5*zoom*(1/defaults.zoom)*page.canvas.width, 0);
-	ctx.lineTo(-0.5*zoom*(1/defaults.zoom)*page.canvas.width, 0);
-	ctx.moveTo(0, 0.5*zoom*(1/defaults.zoom)*page.canvas.height);
-	ctx.lineTo(0, -0.5*zoom*(1/defaults.zoom)*page.canvas.height);
+	var w = page.canvas.width/zoom;
+	var w0 = pos[0];
+	var h = page.canvas.height/zoom;
+	var h0 = pos[1];
+	console.log(w0+"\t"+h0);
+	ctx.moveTo((w/2)+w0, 0);
+	ctx.lineTo((-w/2)+w0, 0);
+	ctx.moveTo(0, (h/2)+h0);
+	ctx.lineTo(0, (-h/2)+h0);
 	ctx.stroke();
 }
 function mouseMoved(event) {
