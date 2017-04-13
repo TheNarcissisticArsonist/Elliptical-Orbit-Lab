@@ -136,13 +136,18 @@ function drawAxes() {
 	var interval = Math.pow(10, intervalMagnitude-1);
 	var tickLength = graphTickLength/zoom;
 	var tickPos = [0, 0];
-	var properStringLength = intervalMagnitude >= 1 ? intervalMagnitude : 2+intervalMagnitude;
+	var numChars;
 	while(tickPos[0] > bounds[0][0]) {
 		tickPos[0] -= interval;
 		ctx.moveTo(tickPos[0], tickPos[1]+(tickLength/2));
 		ctx.lineTo(tickPos[0], tickPos[1]-(tickLength/2));
 		ctx.stroke();
-		drawVerticalText(String(tickPos[0]).slice(0, Math.floor(Math.log10(Math.abs(tickPos[0])))+2), tickPos[0], tickPos[1]+tickLength);
+		numChars = 2+Math.floor(Math.abs(Math.log10(interval)));
+		console.log(numChars);
+		if(tickPos[0] < 0) {
+			++numChars;
+		}
+		drawVerticalText(String(tickPos[0]).slice(0, numChars), tickPos[0], tickPos[1]+tickLength);
 	}
 	tickPos = [0, 0];
 	while(tickPos[0] < bounds[0][1]) {
@@ -150,7 +155,11 @@ function drawAxes() {
 		ctx.moveTo(tickPos[0], tickPos[1]+(tickLength/2));
 		ctx.lineTo(tickPos[0], tickPos[1]-(tickLength/2));
 		ctx.stroke();
-		drawVerticalText(String(tickPos[0]).slice(0, Math.floor(Math.log10(Math.abs(tickPos[0])))+1), tickPos[0], tickPos[1]+tickLength);
+		numChars = 2+Math.floor(Math.abs(Math.log10(interval)));
+		if(tickPos[0] < 0) {
+			++numChars;
+		}
+		drawVerticalText(String(tickPos[0]).slice(0, numChars), tickPos[0], tickPos[1]+tickLength);
 	}
 	tickPos = [0, 0];
 	while(tickPos[1] > bounds[1][0]) {
@@ -158,7 +167,11 @@ function drawAxes() {
 		ctx.moveTo(tickPos[0]+(tickLength/2), tickPos[1]);
 		ctx.lineTo(tickPos[0]-(tickLength/2), tickPos[1]);
 		ctx.stroke();
-		drawHorizontalText(String(tickPos[1]).slice(0, Math.floor(Math.log10(Math.abs(tickPos[1])))+2), tickPos[0]+tickLength, tickPos[1]);
+		numChars = 2+Math.floor(Math.abs(Math.log10(interval)));
+		if(tickPos[1] < 0) {
+			++numChars;
+		}
+		drawHorizontalText(String(tickPos[1]).slice(0, numChars), tickPos[0]+tickLength, -tickPos[1]);
 	}
 	tickPos = [0, 0];
 	while(tickPos[1] < bounds[1][1]) {
@@ -166,7 +179,11 @@ function drawAxes() {
 		ctx.moveTo(tickPos[0]+(tickLength/2), tickPos[1]);
 		ctx.lineTo(tickPos[0]-(tickLength/2), tickPos[1]);
 		ctx.stroke();
-		drawHorizontalText(String(tickPos[1]).slice(0, Math.floor(Math.log10(Math.abs(tickPos[1])))+1), tickPos[0]+tickLength, tickPos[1]);
+		numChars = 2+Math.floor(Math.abs(Math.log10(interval)));
+		if(tickPos[1] < 0) {
+			++numChars;
+		}
+		drawHorizontalText(String(tickPos[1]).slice(0, numChars), tickPos[0]+tickLength, -tickPos[1]);
 	}
 }
 function drawHorizontalText(text, x, y) {
