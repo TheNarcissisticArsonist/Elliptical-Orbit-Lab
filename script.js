@@ -103,13 +103,9 @@ function animateLoop() {
 	requestAnimationFrame(animateLoop);
 }
 function drawAxes() {
-	ctx.moveTo(0, 0);
-	ctx.lineTo(0.5*zoom*(1/defaults.zoom)*page.canvas.width, 0);
-	ctx.moveTo(0, 0);
+	ctx.moveTo(0.5*zoom*(1/defaults.zoom)*page.canvas.width, 0);
 	ctx.lineTo(-0.5*zoom*(1/defaults.zoom)*page.canvas.width, 0);
-	ctx.moveTo(0, 0);
-	ctx.lineTo(0, 0.5*zoom*(1/defaults.zoom)*page.canvas.height);
-	ctx.moveTo(0, 0);
+	ctx.moveTo(0, 0.5*zoom*(1/defaults.zoom)*page.canvas.height);
 	ctx.lineTo(0, -0.5*zoom*(1/defaults.zoom)*page.canvas.height);
 	ctx.stroke();
 }
