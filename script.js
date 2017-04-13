@@ -134,7 +134,7 @@ function drawAxes() {
 	var intervalMagnitude = Math.floor(Math.log10(w));
 	var interval = Math.pow(10, intervalMagnitude-1);
 	var tickLength = graphTickLength/zoom;
-	var tickPos = [w0, h0];
+	var tickPos = [0, 0];
 	while(tickPos[0] > bounds[0][0]) {
 		tickPos[0] -= interval;
 		ctx.moveTo(tickPos[0], tickPos[1]+(tickLength/2));
