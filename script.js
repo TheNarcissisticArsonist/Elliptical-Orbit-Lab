@@ -14,6 +14,7 @@ var dragPanningConstant = 1/40; //This constant slows down the rate that draggin
 var zoomPowerConstant = 1.1; //This is used when calculating the zoom factor when scrolling.
 var mouseWheelCalibrationConstant = 53; //This is the value given when the mouse is scrolled one notch.
 var axisColors = [["#ffaaaa", "#ff0000"], ["#aaaaff", "#0000ff"]]; //The colors for the axes. [[x-, x+], [y-, y+]]
+var graphTickLength = 10; //How tall the tick marks are on the graph.
 
 //Global Variables
 var page = {};
@@ -109,24 +110,37 @@ function drawAxes() {
 	var h = page.canvas.height/zoom;
 	var h0 = pos[1];
 
+	var bounds = [[(-w/2)+w0, (w/2)+w0], [(-h/2)+h0, (h/2)+h0]]; //[[xmin, xmax], [ymin, ymax]];
+
 	ctx.strokeStyle = axisColors[0][0]; //x-
 	ctx.moveTo(0, 0);
-	ctx.lineTo((-w/2)+w0, 0);
+	ctx.lineTo(bounds[0][0], 0);
 	ctx.stroke(); ctx.beginPath();
 	ctx.strokeStyle = axisColors[0][1]; //x+
 	ctx.moveTo(0, 0);
-	ctx.lineTo((w/2)+w0, 0);
+	ctx.lineTo(bounds[0][1], 0);
 	ctx.stroke(); ctx.beginPath();
 	ctx.strokeStyle = axisColors[1][0]; //y-
 	ctx.moveTo(0, 0);
-	ctx.lineTo(0, (-h/2)+h0);
+	ctx.lineTo(0, bounds[1][0]);
 	ctx.stroke(); ctx.beginPath();
 	ctx.strokeStyle = axisColors[1][1]; //y+
 	ctx.moveTo(0, 0);
-	ctx.lineTo(0, (h/2)+h0);
+	ctx.lineTo(0, bounds[1][1]);
 	ctx.stroke(); ctx.beginPath();
 
 	ctx.strokeStyle = "#000000";
+
+	var intervalMagnitude = Math.floor(Math.log10(w));
+	var interval = Math.pow(10, intervalMagnitude-1);
+	var tickLength = graphTickLength/zoom;
+	var tickPos = [w0, h0];
+	while(tickPos[0] > bounds[0][0]) {
+		tickPos[0] -= interval;
+		ctx.moveTo(tickPos[0], tickPos[1]+(tickLength/2));
+		ctx.lineTo(tickPos[0], tickPos[1]-(tickLength/2));
+		ctx.stroke();
+	}
 }
 function mouseMoved(event) {
 	oldMouseLocation[0] = mouseLocation[0];
