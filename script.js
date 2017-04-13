@@ -94,6 +94,7 @@ function clearAndResetCanvas() {
 	ctx.transform(zoom, 0, 0, zoom, 0, 0); //Scale the canvas
 	ctx.transform(1, 0, 0, -1, 0, 0); //Flip the canvas vertically.
 	ctx.lineWidth = 1/zoom; //Keep the lines the same thickness.
+	ctx.font = "10px";
 	ctx.transform(1, 0, 0, 1, -pos[0], -pos[1]);
 }
 function animateLoop() {
@@ -140,6 +141,7 @@ function drawAxes() {
 		ctx.moveTo(tickPos[0], tickPos[1]+(tickLength/2));
 		ctx.lineTo(tickPos[0], tickPos[1]-(tickLength/2));
 		ctx.stroke();
+		drawVerticalText("Test", tickPos[0], tickPos[1]+tickLength);
 	}
 	tickPos = [0, 0];
 	while(tickPos[0] < bounds[0][1]) {
@@ -147,6 +149,7 @@ function drawAxes() {
 		ctx.moveTo(tickPos[0], tickPos[1]+(tickLength/2));
 		ctx.lineTo(tickPos[0], tickPos[1]-(tickLength/2));
 		ctx.stroke();
+		drawVerticalText("Test", tickPos[0], tickPos[1]+tickLength);
 	}
 	tickPos = [0, 0];
 	while(tickPos[1] > bounds[1][0]) {
@@ -154,6 +157,7 @@ function drawAxes() {
 		ctx.moveTo(tickPos[0]+(tickLength/2), tickPos[1]);
 		ctx.lineTo(tickPos[0]-(tickLength/2), tickPos[1]);
 		ctx.stroke();
+		drawHorizontalText("Test", tickPos[0]+tickLength, tickPos[1]);
 	}
 	tickPos = [0, 0];
 	while(tickPos[1] < bounds[1][1]) {
@@ -161,7 +165,31 @@ function drawAxes() {
 		ctx.moveTo(tickPos[0]+(tickLength/2), tickPos[1]);
 		ctx.lineTo(tickPos[0]-(tickLength/2), tickPos[1]);
 		ctx.stroke();
+		drawHorizontalText("Test", tickPos[0]+tickLength, tickPos[1]);
 	}
+}
+function drawHorizontalText(text, x, y) {
+	ctx.save();
+	ctx.setTransform(1, 0, 0, 1, 0, 0);
+	ctx.transform(1, 0, 0, 1, page.canvas.width/2, page.canvas.height/2); //Put 0,0 in the center of the canvas
+	ctx.transform(zoom, 0, 0, zoom, 0, 0); //Scale the canvas
+	ctx.transform(1, 0, 0, 1, -pos[0], pos[1]);
+	ctx.transform(1, 0, 0, 1, x, y);
+	ctx.transform(1/zoom, 0, 0, 1/zoom, 0, 0);
+	ctx.fillText(text, 0, 3);
+	ctx.restore();
+}
+function drawVerticalText(text, x, y) {
+	ctx.save();
+	ctx.setTransform(1, 0, 0, 1, 0, 0);
+	ctx.transform(1, 0, 0, 1, page.canvas.width/2, page.canvas.height/2); //Put 0,0 in the center of the canvas
+	ctx.transform(zoom, 0, 0, zoom, 0, 0); //Scale the canvas
+	ctx.transform(1, 0, 0, 1, -pos[0], pos[1]);
+	ctx.transform(1, 0, 0, 1, x, y);
+	ctx.transform(1/zoom, 0, 0, 1/zoom, 0, 0);
+	ctx.transform(0, 1, -1, 0, 0, 0);
+	ctx.fillText(text, 0, 3);
+	ctx.restore();
 }
 function mouseMoved(event) {
 	oldMouseLocation[0] = mouseLocation[0];
