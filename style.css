@@ -22,3 +22,7 @@ div.button {
 	padding: 5px;
 	background-color: #ffaaaa;
 }
+div#left {
+	vertical-align: top;
+	padding-right: 100px;
+}

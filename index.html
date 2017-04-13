@@ -5,24 +5,24 @@
 	<link rel="stylesheet" type="text/css" href="./style.css">
 </head>
 <body>
+<div id="left">
+	<!-- mEarth, t, G, x0, y0, vx0, vy0 -->
 
-<!-- mEarth, t, G, x0, y0, vx0, vy0 -->
+	<pre>Center Mass m=</pre><textarea id="massCenter" class="numInput"></textarea><br>
+	<pre>Simulation Seconds per Real Second kt=</pre><textarea id="timeRatio" class="numInput"></textarea><br>
+	<pre>Universal Gravitational Constant G=</pre><textarea id="gConstant" class="numInput"></textarea><br>
+	<pre>Initial Position x0=</pre><textarea id="iniPosX" class="numInput"></textarea><br>
+	<pre>Initial Position y0=</pre><textarea id="iniPosY" class="numInput"></textarea><br>
+	<pre>Initial Velocity vx0=</pre><textarea id="iniVelX" class="numInput"></textarea><br>
+	<pre>Initial Velocity vy0=</pre><textarea id="iniVelY" class="numInput"></textarea>
 
-<pre>Center Mass m=</pre><textarea id="massCenter" class="numInput"></textarea><br>
-<pre>Simulation Seconds per Real Second kt=</pre><textarea id="timeRatio" class="numInput"></textarea><br>
-<pre>Universal Gravitational Constant G=</pre><textarea id="gConstant" class="numInput"></textarea><br>
-<pre>Initial Position x0=</pre><textarea id="iniPosX" class="numInput"></textarea><br>
-<pre>Initial Position y0=</pre><textarea id="iniPosY" class="numInput"></textarea><br>
-<pre>Initial Velocity vx0=</pre><textarea id="iniVelX" class="numInput"></textarea><br>
-<pre>Initial Velocity vy0=</pre><textarea id="iniVelY" class="numInput"></textarea>
+	<br><br>
 
-<br><br>
-
-<div id="animate" class="button">Animate</div>
-
-<br><br>
-
-<canvas id="graphArea" width="500px" height="500px"></canvas>
+	<div id="animate" class="button">Animate</div>
+</div>
+<div id="right">
+	<canvas id="graphArea" width="900px" height="900px"></canvas>
+</div>
 
 <script type="text/javascript" src="./script.js"></script>
 </body>
