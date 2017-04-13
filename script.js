@@ -13,6 +13,7 @@ var defaults = {
 var dragPanningConstant = 1/40; //This constant slows down the rate that dragging pans the graph.
 var zoomPowerConstant = 1.1; //This is used when calculating the zoom factor when scrolling.
 var mouseWheelCalibrationConstant = 53; //This is the value given when the mouse is scrolled one notch.
+var axisColors = [["#ffaaaa", "#ff0000"], ["#aaaaff", "#0000ff"]]; //The colors for the axes. [[x-, x+], [y-, y+]]
 
 //Global Variables
 var page = {};
@@ -107,12 +108,25 @@ function drawAxes() {
 	var w0 = pos[0];
 	var h = page.canvas.height/zoom;
 	var h0 = pos[1];
-	console.log(w0+"\t"+h0);
-	ctx.moveTo((w/2)+w0, 0);
+
+	ctx.strokeStyle = axisColors[0][0]; //x-
+	ctx.moveTo(0, 0);
 	ctx.lineTo((-w/2)+w0, 0);
-	ctx.moveTo(0, (h/2)+h0);
+	ctx.stroke(); ctx.beginPath();
+	ctx.strokeStyle = axisColors[0][1]; //x+
+	ctx.moveTo(0, 0);
+	ctx.lineTo((w/2)+w0, 0);
+	ctx.stroke(); ctx.beginPath();
+	ctx.strokeStyle = axisColors[1][0]; //y-
+	ctx.moveTo(0, 0);
 	ctx.lineTo(0, (-h/2)+h0);
-	ctx.stroke();
+	ctx.stroke(); ctx.beginPath();
+	ctx.strokeStyle = axisColors[1][1]; //y+
+	ctx.moveTo(0, 0);
+	ctx.lineTo(0, (h/2)+h0);
+	ctx.stroke(); ctx.beginPath();
+
+	ctx.strokeStyle = "#000000";
 }
 function mouseMoved(event) {
 	oldMouseLocation[0] = mouseLocation[0];
