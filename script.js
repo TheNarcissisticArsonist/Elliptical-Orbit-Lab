@@ -144,7 +144,7 @@ function drawAxes() {
 		if(tickPos[0] < 0) {
 			++numChars;
 		}
-		drawVerticalText(String(tickPos[0]).slice(0, numChars), tickPos[0], tickPos[1]+tickLength);
+		drawVerticalText(makeGraphMarkers(String(tickPos[0]).slice(0, numChars)), tickPos[0], tickPos[1]+tickLength);
 	}
 	tickPos = [0, 0];
 	while(tickPos[0] < bounds[0][1]) {
@@ -156,7 +156,7 @@ function drawAxes() {
 		if(tickPos[0] < 0) {
 			++numChars;
 		}
-		drawVerticalText(String(tickPos[0]).slice(0, numChars), tickPos[0], tickPos[1]+tickLength);
+		drawVerticalText(makeGraphMarkers(String(tickPos[0]).slice(0, numChars)), tickPos[0], tickPos[1]+tickLength);
 	}
 	tickPos = [0, 0];
 	while(tickPos[1] > bounds[1][0]) {
@@ -168,7 +168,7 @@ function drawAxes() {
 		if(tickPos[1] < 0) {
 			++numChars;
 		}
-		drawHorizontalText(String(tickPos[1]).slice(0, numChars), tickPos[0]+tickLength, -tickPos[1]);
+		drawHorizontalText(makeGraphMarkers(String(tickPos[1]).slice(0, numChars)), tickPos[0]+tickLength, -tickPos[1]);
 	}
 	tickPos = [0, 0];
 	while(tickPos[1] < bounds[1][1]) {
@@ -180,7 +180,7 @@ function drawAxes() {
 		if(tickPos[1] < 0) {
 			++numChars;
 		}
-		drawHorizontalText(String(tickPos[1]).slice(0, numChars), tickPos[0]+tickLength, -tickPos[1]);
+		drawHorizontalText(makeGraphMarkers(String(tickPos[1]).slice(0, numChars)), tickPos[0]+tickLength, -tickPos[1]);
 	}
 }
 function drawHorizontalText(text, x, y) {
@@ -205,6 +205,24 @@ function drawVerticalText(text, x, y) {
 	ctx.transform(0, 1, -1, 0, 0, 0);
 	ctx.fillText(text, 0, 3);
 	ctx.restore();
+}
+function makeGraphMarkers(text) {
+	var arr = text.split("");
+	var numCommas = 0;
+	if(!(arr[1] == "." || arr[2] == ".")) {
+		for(var i=arr.length-1; i>0; --i) {
+			if(arr[i-1] == "-") {
+				break;
+			}
+			else if(((arr.length-i)-numCommas) % 3 == 0) {
+				arr.splice(i, 0, ",");
+				++numCommas;
+				--i;
+			}
+		}
+	}
+	arr.push(" m");
+	return arr.join("");
 }
 function mouseMoved(event) {
 	oldMouseLocation[0] = mouseLocation[0];
