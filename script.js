@@ -1,14 +1,14 @@
 //Constants
 var defaults = {
 	massCenter: "5.98E24",
-	timeRatio: "60",
+	timeRatio: "86400",
 	gConstant: "6.67E-11",
 	iniPosX: "1.27E7",
 	iniPosY: "0",
 	iniVelX: "0",
 	iniVelY: "5.6E3",
 	pos: [0, 0],
-	zoom: 0.00005,
+	zoom: 0.00002,
 	gridlines: true
 };
 var dragPanningConstant = 1/defaults.zoom; //This constant slows down the rate that dragging pans the graph.
@@ -291,7 +291,7 @@ function drawAxes() {
 }
 function updatePos() {
 	for(var i=0; i<moonPos.length; ++i) {
-		moonPos[i] += moonVel[i]*(1000*dt*(timeRate/defaults.timeRatio));
+		moonPos[i] += moonVel[i]*(dt*(1/1000)*(timeRate/60));
 	}
 	path.push(moonPos.slice(0));
 }
@@ -302,8 +302,8 @@ function updateVel() {
 	var vecAcl = [];
 	vecAcl[0] = -Math.cos(theta)*notVecAcl;
 	vecAcl[1] = -Math.sin(theta)*notVecAcl;
-	moonVel[0] += vecAcl[0]*(1000*dt*(timeRate/defaults.timeRatio));
-	moonVel[1] += vecAcl[1]*(1000*dt*(timeRate/defaults.timeRatio));
+	moonVel[0] += vecAcl[0]*(dt*(1/1000)*(timeRate/60));
+	moonVel[1] += vecAcl[1]*(dt*(1/1000)*(timeRate/60));
 }
 function drawPath() {
 	ctx.strokeStyle = pathColor;
