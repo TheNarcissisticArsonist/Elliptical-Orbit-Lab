@@ -28,6 +28,8 @@ var mouseButtons = {};
 var overCanvas = false;
 var ctx;
 var drawGridlines;
+var moonPos = [];
+var moonVel = [];
 
 //Classes
 
@@ -88,6 +90,31 @@ function loadDefaults() {
 function startAnimation() {
 	console.log("FUNCTION CALL: animate()");
 
+	if(isNaN(page.iniPosX.value)) {
+		page.iniPosX.focus();
+		page.iniPosX.select();
+		return;
+	}
+	else if(isNaN(page.iniPosY.value)) {
+		page.iniPosY.focus();
+		page.iniPosy.select();
+		return;
+	}
+
+	if(isNaN(page.iniVelX.value)) {
+		page.iniVelX.focus();
+		page.iniVelX.select();
+		return;
+	}
+	else if(isNaN(page.iniVelY.value)) {
+		page.iniVelY.focus();
+		page.inivelY.select();
+		return;
+	}
+
+	moonPos = [page.iniPosX.value, page.iniPosY.value];
+	moonVel = [page.iniVelX.value, page.iniVelY.value];
+	
 	requestAnimationFrame(animateLoop);
 }
 function clearAndResetCanvas() {
@@ -106,6 +133,7 @@ function clearAndResetCanvas() {
 function animateLoop() {
 	clearAndResetCanvas();
 	drawAxes();
+
 
 	requestAnimationFrame(animateLoop);
 }
