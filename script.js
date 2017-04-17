@@ -38,6 +38,7 @@ var g;
 var path = [];
 var t0;
 var dt;
+var animating = false;
 
 //Classes
 
@@ -145,7 +146,12 @@ function startAnimation() {
 
 	t0 = new Date().getTime();
 
-	requestAnimationFrame(animateLoop);
+
+	if(!animating) {
+		requestAnimationFrame(animateLoop);
+	}
+	
+	animating = true;
 }
 function clearAndResetCanvas() {
 	//console.log("FUNCTION CALL: clearAndResetCanvas()");
