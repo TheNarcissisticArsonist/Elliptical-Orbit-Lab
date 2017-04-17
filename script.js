@@ -30,6 +30,9 @@ var ctx;
 var drawGridlines;
 var moonPos = [];
 var moonVel = [];
+var earthMass;
+var timeRate;
+var g;
 
 //Classes
 
@@ -90,7 +93,22 @@ function loadDefaults() {
 function startAnimation() {
 	console.log("FUNCTION CALL: animate()");
 
-	if(isNaN(page.iniPosX.value)) {
+	if(isNaN(page.massCenter.value)) {
+		page.massCenter.focus();
+		page.massCenter.select();
+		return;
+	}
+	else if(isNaN(page.timeRatio.value)) {
+		page.timeRatio.focus();
+		page.timeRatio.select();
+		return;
+	}
+	else if(isNaN(page.gConstant.value)) {
+		page.gConstant.focus();
+		page.gConstant.select();
+		return;
+	}
+	else if(isNaN(page.iniPosX.value)) {
 		page.iniPosX.focus();
 		page.iniPosX.select();
 		return;
@@ -100,8 +118,7 @@ function startAnimation() {
 		page.iniPosy.select();
 		return;
 	}
-
-	if(isNaN(page.iniVelX.value)) {
+	else if(isNaN(page.iniVelX.value)) {
 		page.iniVelX.focus();
 		page.iniVelX.select();
 		return;
@@ -112,8 +129,11 @@ function startAnimation() {
 		return;
 	}
 
-	moonPos = [page.iniPosX.value, page.iniPosY.value];
-	moonVel = [page.iniVelX.value, page.iniVelY.value];
+	earthMass = Number(page.massCenter.value);
+	timeRate = Number(page.timeRatio.value);
+	g = Number(page.gConstant.value);
+	moonPos = [Number(page.iniPosX.value), Number(page.iniPosY.value)];
+	moonVel = [Number(page.iniVelX.value), Number(page.iniVelY.value)];
 	
 	requestAnimationFrame(animateLoop);
 }
