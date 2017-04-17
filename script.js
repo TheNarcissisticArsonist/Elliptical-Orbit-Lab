@@ -15,6 +15,8 @@ var dragPanningConstant = 1/defaults.zoom; //This constant slows down the rate t
 var zoomPowerConstant = 1.1; //This is used when calculating the zoom factor when scrolling.
 var mouseWheelCalibrationConstant = 53; //This is the value given when the mouse is scrolled one notch.
 var axisColors = [["#ffaaaa", "#ff0000"], ["#aaaaff", "#0000ff"]]; //The colors for the axes. [[x-, x+], [y-, y+]]
+var gridlinesColor = "#eeeeee";
+var pathColor = "#000000";
 var graphTickLength = 10; //How tall the tick marks are on the graph.
 
 //Global Variables
@@ -33,6 +35,7 @@ var moonVel = [];
 var earthMass;
 var timeRate;
 var g;
+var path = [];
 
 //Classes
 
@@ -134,7 +137,10 @@ function startAnimation() {
 	g = Number(page.gConstant.value);
 	moonPos = [Number(page.iniPosX.value), Number(page.iniPosY.value)];
 	moonVel = [Number(page.iniVelX.value), Number(page.iniVelY.value)];
-	
+
+	path = [];
+	path.push(moonPos.slice(0));
+
 	requestAnimationFrame(animateLoop);
 }
 function clearAndResetCanvas() {
@@ -153,7 +159,9 @@ function clearAndResetCanvas() {
 function animateLoop() {
 	clearAndResetCanvas();
 	drawAxes();
-
+	updatePos();
+	updateVel();
+	drawPath();
 
 	requestAnimationFrame(animateLoop);
 }
@@ -193,7 +201,7 @@ function drawAxes() {
 		tickPos[0] -= interval;
 		if(drawGridlines) {
 			ctx.beginPath();
-			ctx.strokeStyle = "#eeeeee";
+			ctx.strokeStyle = gridlinesColor;
 			ctx.moveTo(tickPos[0], bounds[1][0]);
 			ctx.lineTo(tickPos[0], bounds[1][1]);
 			ctx.stroke();
@@ -214,7 +222,7 @@ function drawAxes() {
 		tickPos[0] += interval;
 		if(drawGridlines) {
 			ctx.beginPath();
-			ctx.strokeStyle = "#eeeeee";
+			ctx.strokeStyle = gridlinesColor;
 			ctx.moveTo(tickPos[0], bounds[1][0]);
 			ctx.lineTo(tickPos[0], bounds[1][1]);
 			ctx.stroke();
@@ -235,7 +243,7 @@ function drawAxes() {
 		tickPos[1] -= interval;
 		if(drawGridlines) {
 			ctx.beginPath();
-			ctx.strokeStyle = "#eeeeee";
+			ctx.strokeStyle = gridlinesColor;
 			ctx.moveTo(bounds[0][0], tickPos[1]);
 			ctx.lineTo(bounds[0][1], tickPos[1]);
 			ctx.stroke();
@@ -256,7 +264,7 @@ function drawAxes() {
 		tickPos[1] += interval;
 		if(drawGridlines) {
 			ctx.beginPath();
-			ctx.strokeStyle = "#eeeeee";
+			ctx.strokeStyle = gridlinesColor;
 			ctx.moveTo(bounds[0][0], tickPos[1]);
 			ctx.lineTo(bounds[0][1], tickPos[1]);
 			ctx.stroke();
@@ -272,6 +280,27 @@ function drawAxes() {
 		}
 		drawHorizontalText(makeGraphMarkers(String(tickPos[1]).slice(0, numChars)), tickPos[0]+tickLength, -tickPos[1]);
 	}
+}
+function updatePos() {
+	for(var i=0; i<moonPos.length; ++i) {
+		moonPos[i] += moonVel[i];
+	}
+	path.push(moonPos.slice(0));
+}
+function updateVel() {
+
+}
+function drawPath() {
+	ctx.strokeStyle = pathColor;
+	ctx.beginPath();
+	ctx.moveTo(path[0][0], path[0][1]);
+	for(var i=1; i<path.length; ++i) {
+		ctx.lineTo(path[i][0], path[i][1]);
+	}
+	ctx.stroke();
+
+	ctx.strokeStyle = "#000000";
+	ctx.beginPath();
 }
 function drawHorizontalText(text, x, y) {
 	ctx.save();
