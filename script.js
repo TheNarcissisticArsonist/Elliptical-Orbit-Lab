@@ -36,6 +36,8 @@ var earthMass;
 var timeRate;
 var g;
 var path = [];
+var t0;
+var dt;
 
 //Classes
 
@@ -141,6 +143,8 @@ function startAnimation() {
 	path = [];
 	path.push(moonPos.slice(0));
 
+	t0 = new Date().getTime();
+
 	requestAnimationFrame(animateLoop);
 }
 function clearAndResetCanvas() {
@@ -157,6 +161,10 @@ function clearAndResetCanvas() {
 	ctx.transform(1, 0, 0, 1, -pos[0], -pos[1]);
 }
 function animateLoop() {
+	var t = new Date().getTime();
+	dt = t - t0;
+	t0 = t;
+
 	clearAndResetCanvas();
 	drawAxes();
 	updatePos();
@@ -283,12 +291,19 @@ function drawAxes() {
 }
 function updatePos() {
 	for(var i=0; i<moonPos.length; ++i) {
-		moonPos[i] += moonVel[i];
+		moonPos[i] += moonVel[i]*(1000*dt*(timeRate/defaults.timeRatio));
 	}
 	path.push(moonPos.slice(0));
 }
 function updateVel() {
-
+	var r = Math.sqrt(Math.pow(moonPos[0], 2) + Math.pow(moonPos[1], 2));
+	var theta = Math.atan2(moonPos[1], moonPos[0]);
+	var notVecAcl = g * earthMass * (1/Math.pow(r, 2));
+	var vecAcl = [];
+	vecAcl[0] = -Math.cos(theta)*notVecAcl;
+	vecAcl[1] = -Math.sin(theta)*notVecAcl;
+	moonVel[0] += vecAcl[0]*(1000*dt*(timeRate/defaults.timeRatio));
+	moonVel[1] += vecAcl[1]*(1000*dt*(timeRate/defaults.timeRatio));
 }
 function drawPath() {
 	ctx.strokeStyle = pathColor;
