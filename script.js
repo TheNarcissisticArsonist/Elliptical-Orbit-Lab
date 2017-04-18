@@ -1,12 +1,14 @@
 //Constants
 var defaults = {
 	massCenter: "5.98E24",
-	timeRatio: "86400",
+	timeRatio: "86400000",
 	gConstant: "6.67E-11",
-	iniPosX: "1.27E7",
+	iniPosX: "384405000",
 	iniPosY: "0",
 	iniVelX: "0",
-	iniVelY: "5.6E3",
+	iniVelY: "1000",
+	rEarth: "6.371E6",
+	rMoon: "1.737E6",
 	pos: [0, 0],
 	zoom: 0.00002,
 	gridlines: true
@@ -39,6 +41,8 @@ var path = [];
 var t0;
 var dt;
 var animating = false;
+var rE;
+var rM;
 
 //Classes
 
@@ -54,6 +58,8 @@ function setup() {
 	page.iniPosY = document.getElementById("iniPosY");
 	page.iniVelX = document.getElementById("iniVelX");
 	page.iniVelY = document.getElementById("iniVelY");
+	page.rEarth = document.getElementById("rEarth");
+	page.rMoon = document.getElementById("rMoon");
 	page.animate = document.getElementById("animate");
 	page.canvas = document.getElementById("graphArea");
 	page.numInputList = document.getElementsByClassName("numInput");
@@ -91,6 +97,8 @@ function loadDefaults() {
 	page.iniPosY.value = defaults.iniPosY;
 	page.iniVelX.value = defaults.iniVelX;
 	page.iniVelY.value = defaults.iniVelY;
+	page.rEarth.value = defaults.rEarth;
+	page.rMoon.value = defaults.rMoon;
 	pos = defaults.pos.slice(0);
 	zoom = defaults.zoom;
 	page.gridlines.checked = defaults.gridlines;
@@ -134,12 +142,24 @@ function startAnimation() {
 		page.inivelY.select();
 		return;
 	}
+	else if(isNaN(page.rEarth.value)) {
+		page.rEarth.focus();
+		page.rEarth.select();
+		return;
+	}
+	else if(isNaN(page.rMoon.value)) {
+		page.rMoon.focus();
+		page.rMoon.select();
+		return;
+	}
 
 	earthMass = Number(page.massCenter.value);
 	timeRate = Number(page.timeRatio.value);
 	g = Number(page.gConstant.value);
 	moonPos = [Number(page.iniPosX.value), Number(page.iniPosY.value)];
 	moonVel = [Number(page.iniVelX.value), Number(page.iniVelY.value)];
+	rE = Number(page.rEarth.value);
+	rM = Number(page.rMoon.value);
 
 	path = [];
 	path.push(moonPos.slice(0));
@@ -322,6 +342,12 @@ function drawPath() {
 
 	ctx.strokeStyle = "#000000";
 	ctx.beginPath();
+	ctx.moveTo(rE, 0);
+	ctx.arc(0, 0, rE, 0, 2*Math.PI);
+	ctx.stroke();
+	ctx.moveTo(moonPos[0]+rM, moonPos[1]);
+	ctx.arc(moonPos[0], moonPos[1], rM, 0, 2*Math.PI);
+	ctx.stroke();
 }
 function drawHorizontalText(text, x, y) {
 	ctx.save();
