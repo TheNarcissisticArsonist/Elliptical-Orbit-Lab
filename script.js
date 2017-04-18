@@ -1,7 +1,7 @@
 //Constants
 var defaults = {
 	massCenter: "5.98E24",
-	timeRatio: "86400000",
+	timeRatio: "34560000",
 	gConstant: "6.67E-11",
 	iniPosX: "384405000",
 	iniPosY: "0",
@@ -10,7 +10,7 @@ var defaults = {
 	rEarth: "6.371E6",
 	rMoon: "1.737E6",
 	pos: [0, 0],
-	zoom: 0.00002,
+	zoom: 0.0000005,
 	gridlines: true
 };
 var dragPanningConstant = 1/defaults.zoom; //This constant slows down the rate that dragging pans the graph.
@@ -19,6 +19,8 @@ var mouseWheelCalibrationConstant = 53; //This is the value given when the mouse
 var axisColors = [["#ffaaaa", "#ff0000"], ["#aaaaff", "#0000ff"]]; //The colors for the axes. [[x-, x+], [y-, y+]]
 var gridlinesColor = "#eeeeee";
 var pathColor = "#000000";
+var earthEdgeColor = "#0000ff";
+var moonEdgeColor = "#222222";
 var graphTickLength = 10; //How tall the tick marks are on the graph.
 
 //Global Variables
@@ -340,14 +342,18 @@ function drawPath() {
 	}
 	ctx.stroke();
 
-	ctx.strokeStyle = "#000000";
+	ctx.fillStyle = earthEdgeColor;
 	ctx.beginPath();
 	ctx.moveTo(rE, 0);
 	ctx.arc(0, 0, rE, 0, 2*Math.PI);
-	ctx.stroke();
+	ctx.fill();
+	ctx.fillStyle = moonEdgeColor;
+	ctx.beginPath();
 	ctx.moveTo(moonPos[0]+rM, moonPos[1]);
 	ctx.arc(moonPos[0], moonPos[1], rM, 0, 2*Math.PI);
-	ctx.stroke();
+	ctx.fill();
+	ctx.fillStyle = "#000000";
+	ctx.beginPath();
 }
 function drawHorizontalText(text, x, y) {
 	ctx.save();
