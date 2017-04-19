@@ -37,7 +37,8 @@ var drawGridlines;
 var moonPos = [];
 var moonVel = [];
 var earthMass;
-var timeRate;
+var displayRate;
+var calcRate = 1;
 var g;
 var path = [];
 var t0;
@@ -156,7 +157,7 @@ function startAnimation() {
 	}
 
 	earthMass = Number(page.massCenter.value);
-	timeRate = Number(page.timeRatio.value);
+	displayRate = Number(page.timeRatio.value);
 	g = Number(page.gConstant.value);
 	moonPos = [Number(page.iniPosX.value), Number(page.iniPosY.value)];
 	moonVel = [Number(page.iniVelX.value), Number(page.iniVelY.value)];
@@ -191,8 +192,9 @@ function clearAndResetCanvas() {
 function animateLoop() {
 	var t = new Date().getTime();
 	dt = t - t0;
-	if(dt > 1) {
-		dt *= timeRate
+	dt = dt / 1000; //Display ms to display s
+	dt *= displayRate; //Display s to simulated s
+	if(dt > calcRate) {
 		t0 = t;
 
 		clearAndResetCanvas();
@@ -320,17 +322,18 @@ function drawAxes() {
 	}
 }
 function updatePhys() {
-	for(var i=0; i<dt; ++i) {
+	for(var i=0; i<dt; i+=1/calcRate) { //For each simulated s elapsed run the following calculations calcRate times
 		var r = Math.sqrt(Math.pow(moonPos[0], 2) + Math.pow(moonPos[1], 2));
 		var theta = Math.atan2(moonPos[1], moonPos[0]);
 		var notVecAcl = g * earthMass * (1/Math.pow(r, 2));
 		var vecAcl = [];
 		vecAcl[0] = -Math.cos(theta)*notVecAcl;
 		vecAcl[1] = -Math.sin(theta)*notVecAcl;
-		moonVel[0] += vecAcl[0]*(dt*(1/1000)*(timeRate/60));
-		moonVel[1] += vecAcl[1]*(dt*(1/1000)*(timeRate/60));
-		moonPos[0] += moonVel[0]*(dt*(1/1000)*(timeRate/60));
-		moonPos[1] += moonVel[1]*(dt*(1/1000)*(timeRate/60));
+		var sdt = 1/calcRate; //Simulated s to calculation-level s.
+		moonVel[0] += vecAcl[0]*sdt; //Velocity increases by acceleration times simulated seconds divided by the calcRate
+		moonVel[1] += vecAcl[1]*sdt;
+		moonPos[0] += moonVel[0]*sdt; //Position increases by velocity times simulated seconds divided by the calcRate
+		moonPos[1] += moonVel[1]*sdt;
 	}
 	path.push(moonPos.slice(0)); //I may end up putting this outside the for loop.
 }
