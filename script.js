@@ -1,7 +1,7 @@
 //Constants
 var defaults = {
 	massCenter: "5.98E24",
-	timeRatio: "100",
+	timeRatio: "691200",
 	gConstant: "6.67E-11",
 	iniPosX: "384405000",
 	iniPosY: "0",
