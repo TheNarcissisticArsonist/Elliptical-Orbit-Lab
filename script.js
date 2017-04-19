@@ -46,6 +46,7 @@ var dt;
 var animating = false;
 var rE;
 var rM;
+var orgStart;
 
 //Classes
 
@@ -167,8 +168,8 @@ function startAnimation() {
 	path = [];
 	path.push(moonPos.slice(0));
 
-	t0 = new Date().getTime();
-
+	t0 = window.performance.now();
+	orgStart = t0;
 
 	if(!animating) {
 		requestAnimationFrame(animateLoop);
@@ -190,7 +191,7 @@ function clearAndResetCanvas() {
 	ctx.transform(1, 0, 0, 1, -pos[0], -pos[1]);
 }
 function animateLoop() {
-	var t = new Date().getTime();
+	var t = window.performance.now();
 	dt = t - t0;
 	dt = dt / 1000; //Display ms to display s
 	dt *= displayRate; //Display s to simulated s
@@ -201,6 +202,12 @@ function animateLoop() {
 		drawAxes();
 		updatePhys();
 		drawPath();
+	}
+	if(moonPos[1] > 0) {
+		console.log(t - orgStart);
+	}
+	else {
+		console.log("\n");
 	}
 
 	requestAnimationFrame(animateLoop);
