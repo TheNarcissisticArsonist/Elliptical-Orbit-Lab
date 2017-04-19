@@ -1,7 +1,7 @@
 //Constants
 var defaults = {
 	massCenter: "5.98E24",
-	timeRatio: "34560000",
+	timeRatio: "100",
 	gConstant: "6.67E-11",
 	iniPosX: "384405000",
 	iniPosY: "0",
@@ -107,7 +107,7 @@ function loadDefaults() {
 	drawGridlines = page.gridlines.checked;
 }
 function startAnimation() {
-	console.log("FUNCTION CALL: startAnimation()");
+	console.log("FUNCTION CALL: animate()");
 
 	if(isNaN(page.massCenter.value)) {
 		page.massCenter.focus();
