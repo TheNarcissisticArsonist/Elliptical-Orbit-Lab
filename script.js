@@ -107,7 +107,7 @@ function loadDefaults() {
 	drawGridlines = page.gridlines.checked;
 }
 function startAnimation() {
-	console.log("FUNCTION CALL: animate()");
+	console.log("FUNCTION CALL: startAnimation()");
 
 	if(isNaN(page.massCenter.value)) {
 		page.massCenter.focus();
@@ -191,13 +191,15 @@ function clearAndResetCanvas() {
 function animateLoop() {
 	var t = new Date().getTime();
 	dt = t - t0;
-	t0 = t;
+	if(dt > 1) {
+		dt *= timeRate
+		t0 = t;
 
-	clearAndResetCanvas();
-	drawAxes();
-	updatePos();
-	updateVel();
-	drawPath();
+		clearAndResetCanvas();
+		drawAxes();
+		updatePhys();
+		drawPath();
+	}
 
 	requestAnimationFrame(animateLoop);
 }
@@ -317,21 +319,20 @@ function drawAxes() {
 		drawHorizontalText(makeGraphMarkers(String(tickPos[1]).slice(0, numChars)), tickPos[0]+tickLength, -tickPos[1]);
 	}
 }
-function updatePos() {
-	for(var i=0; i<moonPos.length; ++i) {
-		moonPos[i] += moonVel[i]*(dt*(1/1000)*(timeRate/60));
+function updatePhys() {
+	for(var i=0; i<dt; ++i) {
+		var r = Math.sqrt(Math.pow(moonPos[0], 2) + Math.pow(moonPos[1], 2));
+		var theta = Math.atan2(moonPos[1], moonPos[0]);
+		var notVecAcl = g * earthMass * (1/Math.pow(r, 2));
+		var vecAcl = [];
+		vecAcl[0] = -Math.cos(theta)*notVecAcl;
+		vecAcl[1] = -Math.sin(theta)*notVecAcl;
+		moonVel[0] += vecAcl[0]*(dt*(1/1000)*(timeRate/60));
+		moonVel[1] += vecAcl[1]*(dt*(1/1000)*(timeRate/60));
+		moonPos[0] += moonVel[0]*(dt*(1/1000)*(timeRate/60));
+		moonPos[1] += moonVel[1]*(dt*(1/1000)*(timeRate/60));
 	}
-	path.push(moonPos.slice(0));
-}
-function updateVel() {
-	var r = Math.sqrt(Math.pow(moonPos[0], 2) + Math.pow(moonPos[1], 2));
-	var theta = Math.atan2(moonPos[1], moonPos[0]);
-	var notVecAcl = g * earthMass * (1/Math.pow(r, 2));
-	var vecAcl = [];
-	vecAcl[0] = -Math.cos(theta)*notVecAcl;
-	vecAcl[1] = -Math.sin(theta)*notVecAcl;
-	moonVel[0] += vecAcl[0]*(dt*(1/1000)*(timeRate/60));
-	moonVel[1] += vecAcl[1]*(dt*(1/1000)*(timeRate/60));
+	path.push(moonPos.slice(0)); //I may end up putting this outside the for loop.
 }
 function drawPath() {
 	ctx.strokeStyle = pathColor;
