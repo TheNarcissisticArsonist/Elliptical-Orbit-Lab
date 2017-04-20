@@ -1,9 +1,9 @@
 //Constants
 var defaults = {
 	massCenter: "5.98E24",
-	timeRate: "691200",
+	timeRate: String(60*60*24),
 	calcRate: "1",
-	dispRate: "60",
+	dispRate: String(60*10),
 	gConstant: "6.67E-11",
 	iniPosX: "384405000",
 	iniPosY: "0",
@@ -355,8 +355,7 @@ function updatePhys() {
 		moonPos[0] += moonVel[0]*sdt; //Position increases by velocity times simulated seconds divided by the calcRate
 		moonPos[1] += moonVel[1]*sdt;
 		++numSteps;
-		numSteps %= dispRate;
-		if(numSteps == 0) {
+		if(numSteps % dispRate == 0) {
 			path.push(moonPos.slice(0)); //I may end up putting this outside the for loop.
 		}
 	}
