@@ -227,8 +227,6 @@ function animateLoop() {
 		drawPath();
 	}
 
-	//console.log(numSteps);
-
 	requestAnimationFrame(animateLoop);
 }
 function drawAxes() {
