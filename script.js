@@ -1,7 +1,9 @@
 //Constants
 var defaults = {
 	massCenter: "5.98E24",
-	timeRatio: "691200",
+	timeRate: "691200",
+	calcRate: "1",
+	dispRate: "60",
 	gConstant: "6.67E-11",
 	iniPosX: "384405000",
 	iniPosY: "0",
@@ -37,8 +39,8 @@ var drawGridlines;
 var moonPos = [];
 var moonVel = [];
 var earthMass;
-var displayRate;
-var calcRate = 1;
+var calcRate;
+var dispRate;
 var g;
 var path = [];
 var t0;
@@ -47,6 +49,7 @@ var animating = false;
 var rE;
 var rM;
 var orgStart;
+var numSteps = 0;
 
 //Classes
 
@@ -56,7 +59,9 @@ function setup() {
 	console.log("FUNCTION CALL: setup()");
 
 	page.massCenter = document.getElementById("massCenter");
-	page.timeRatio = document.getElementById("timeRatio");
+	page.timeRate = document.getElementById("timeRate");
+	page.calcRate = document.getElementById("calcRate");
+	page.dispRate = document.getElementById("dispRate");
 	page.gConstant = document.getElementById("gConstant");
 	page.iniPosX = document.getElementById("iniPosX");
 	page.iniPosY = document.getElementById("iniPosY");
@@ -95,7 +100,9 @@ function loadDefaults() {
 	console.log("FUNCTION CALL: loadDefaults()");
 
 	page.massCenter.value = defaults.massCenter;
-	page.timeRatio.value = defaults.timeRatio;
+	page.timeRate.value = defaults.timeRate;
+	page.calcRate.value = defaults.calcRate;
+	page.dispRate.value = defaults.dispRate;
 	page.gConstant.value = defaults.gConstant;
 	page.iniPosX.value = defaults.iniPosX;
 	page.iniPosY.value = defaults.iniPosY;
@@ -116,10 +123,18 @@ function startAnimation() {
 		page.massCenter.select();
 		return;
 	}
-	else if(isNaN(page.timeRatio.value)) {
-		page.timeRatio.focus();
-		page.timeRatio.select();
+	else if(isNaN(page.timeRate.value)) {
+		page.timeRate.focus();
+		page.timeRate.select();
 		return;
+	}
+	else if(isNaN(page.calcRate.value)) {
+		page.calcRate.focus();
+		page.calcRate.select();
+	}
+	else if(isNaN(page.dispRate.value)) {
+		page.dispRate.focus();
+		page.dispRate.select();
 	}
 	else if(isNaN(page.gConstant.value)) {
 		page.gConstant.focus();
@@ -158,7 +173,9 @@ function startAnimation() {
 	}
 
 	earthMass = Number(page.massCenter.value);
-	displayRate = Number(page.timeRatio.value);
+	timeRate = Number(page.timeRate.value);
+	dispRate = Number(page.dispRate.value);
+	calcRate = Number(page.calcRate.value);
 	g = Number(page.gConstant.value);
 	moonPos = [Number(page.iniPosX.value), Number(page.iniPosY.value)];
 	moonVel = [Number(page.iniVelX.value), Number(page.iniVelY.value)];
@@ -194,7 +211,7 @@ function animateLoop() {
 	var t = window.performance.now();
 	dt = t - t0;
 	dt = dt / 1000; //Display ms to display s
-	dt *= displayRate; //Display s to simulated s
+	dt *= timeRate; //Display s to simulated s
 	if(dt > calcRate) {
 		t0 = t;
 
@@ -203,12 +220,8 @@ function animateLoop() {
 		updatePhys();
 		drawPath();
 	}
-	if(moonPos[1] > 0) {
-		console.log(t - orgStart);
-	}
-	else {
-		console.log("\n");
-	}
+
+	console.log(numSteps);
 
 	requestAnimationFrame(animateLoop);
 }
@@ -341,8 +354,12 @@ function updatePhys() {
 		moonVel[1] += vecAcl[1]*sdt;
 		moonPos[0] += moonVel[0]*sdt; //Position increases by velocity times simulated seconds divided by the calcRate
 		moonPos[1] += moonVel[1]*sdt;
+		++numSteps;
+		numSteps %= dispRate;
+		if(numSteps == 0) {
+			path.push(moonPos.slice(0)); //I may end up putting this outside the for loop.
+		}
 	}
-	path.push(moonPos.slice(0)); //I may end up putting this outside the for loop.
 }
 function drawPath() {
 	ctx.strokeStyle = pathColor;
