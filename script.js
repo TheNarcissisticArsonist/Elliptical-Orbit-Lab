@@ -50,6 +50,7 @@ var rE;
 var rM;
 var orgStart;
 var numSteps = 0;
+var paused;
 
 //Classes
 
@@ -70,6 +71,7 @@ function setup() {
 	page.rEarth = document.getElementById("rEarth");
 	page.rMoon = document.getElementById("rMoon");
 	page.animate = document.getElementById("animate");
+	page.pause = document.getElementById("pause");
 	page.canvas = document.getElementById("graphArea");
 	page.numInputList = document.getElementsByClassName("numInput");
 	page.gridlines = document.getElementById("gridlines");
@@ -91,6 +93,7 @@ function inputSetup() {
 	page.canvas.addEventListener("mouseleave", function(event) { mouseLeaveCanvas(event); });
 	page.animate.addEventListener("click", startAnimation);
 	page.gridlines.addEventListener("click", function() { drawGridlines = this.checked; });
+	page.pause.addEventListener("click", function() { paused = !paused; });
 
 	for(var i=0; i<page.numInputList.length; ++i) {
 		page.numInputList[i].addEventListener(focus, function() { this.select(); });
@@ -193,6 +196,7 @@ function startAnimation() {
 	}
 	
 	animating = true;
+	paused = false;
 }
 function clearAndResetCanvas() {
 	//console.log("FUNCTION CALL: clearAndResetCanvas()");
@@ -217,11 +221,13 @@ function animateLoop() {
 
 		clearAndResetCanvas();
 		drawAxes();
-		updatePhys();
+		if(!paused) {
+			updatePhys();
+		}
 		drawPath();
 	}
 
-	console.log(numSteps);
+	//console.log(numSteps);
 
 	requestAnimationFrame(animateLoop);
 }
